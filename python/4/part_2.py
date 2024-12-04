@@ -55,5 +55,4 @@ for row in range(len(input_array)):
                 print(target_coords)
                 answer_sum += verify_xmas(target_coords)
 
-
 print(answer_sum)
