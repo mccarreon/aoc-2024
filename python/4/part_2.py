@@ -9,53 +9,51 @@ with open(input_file, 'r') as file:
     for line in file:
         input_array.append(list(line.strip()))
 
-def find_xmas(row: int, col: int, target_idx: int, input_array: list, direction: str = 'ALL'):
-    target = 'XMAS'
-    target_letter = target[target_idx]
+    
+def find_targets(row: int, col: int, input_array: list, target_coords):
     row_len, col_len = len(input_array), len(input_array[0])
-    
-    if row < 0 or col < 0 or row >= row_len or col >= col_len:
-        return 0
+    targets = 'MS'
 
+    if row < 0 or col < 0 or row >= row_len or col >= col_len:
+        return
+    
     current_char = input_array[row][col]
-    if current_char != target_letter:
+    if current_char in targets:
+        target_coords[current_char].append((row, col))
+
+def verify_xmas(target_coords: dict):
+    m1, m2 = target_coords['M']
+    a_x, a_y = target_coords['A'][0]
+
+    dx = m1[0] - a_x
+    dy = m1[1] - a_y
+
+    diag_x = a_x - dx
+    diag_y = a_y - dy
+
+    diagonal = (diag_x, diag_y)
+    if m2 == diagonal:
         return 0
-    
-    if target_letter == 'S':
+    else:
+        print(f'Here is M1 and calculated diagonal: {m1, diagonal}')
         return 1
-    
-    if direction == 'ALL':
-        return (
-            find_xmas(row + 1, col, target_idx + 1, input_array, 'DOWN') + 
-            find_xmas(row - 1, col, target_idx + 1, input_array, 'UP') + 
-            find_xmas(row, col + 1, target_idx + 1, input_array, 'RIGHT') + 
-            find_xmas(row, col - 1, target_idx + 1, input_array, 'LEFT') + 
-            find_xmas(row + 1, col + 1, target_idx + 1, input_array, 'DOWN_RIGHT') + 
-            find_xmas(row + 1, col - 1, target_idx + 1, input_array, 'DOWN_LEFT') + 
-            find_xmas(row - 1, col + 1, target_idx + 1, input_array, 'UP_RIGHT') + 
-            find_xmas(row - 1, col - 1, target_idx + 1, input_array, 'UP_LEFT')
-        )
-    elif direction == 'DOWN':
-        return find_xmas(row + 1, col, target_idx + 1, input_array, 'DOWN')
-    elif direction == 'UP':
-        return find_xmas(row - 1, col, target_idx + 1, input_array, 'UP')
-    elif direction == 'RIGHT':
-        return find_xmas(row, col + 1, target_idx + 1, input_array, 'RIGHT')
-    elif direction == 'LEFT':
-        return find_xmas(row, col - 1, target_idx + 1, input_array, 'LEFT')
-    elif direction == 'DOWN_RIGHT':
-        return find_xmas(row + 1, col + 1, target_idx + 1, input_array, 'DOWN_RIGHT')
-    elif direction == 'DOWN_LEFT':
-        return find_xmas(row + 1, col - 1, target_idx + 1, input_array, 'DOWN_LEFT')
-    elif direction == 'UP_RIGHT':
-        return find_xmas(row - 1, col + 1, target_idx + 1, input_array, 'UP_RIGHT')
-    elif direction == 'UP_LEFT':
-        return find_xmas(row - 1, col - 1, target_idx + 1, input_array, 'UP_LEFT')
 
 answer_sum = 0
 for row in range(len(input_array)):
     for col in range(len(input_array[row])):
-        if input_array[row][col] == 'X':
-            answer_sum += find_xmas(row, col, 0, input_array)
+        if input_array[row][col] == 'A':
+            target_coords = {'M': [], 'S': [], 'A': [(row, col)]}
+            # look at bottom left
+            find_targets(row + 1, col - 1, input_array, target_coords)
+            # look at bottom right
+            find_targets(row + 1, col + 1, input_array, target_coords)
+            # look at top left
+            find_targets(row - 1, col - 1, input_array, target_coords)
+            # look at top right
+            find_targets(row - 1, col + 1, input_array, target_coords)
+            if len(target_coords['M']) == 2 and len(target_coords['S']) == 2:
+                print(target_coords)
+                answer_sum += verify_xmas(target_coords)
+
 
 print(answer_sum)
