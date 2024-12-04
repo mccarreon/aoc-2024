@@ -16,6 +16,7 @@ for match in matches:
         is_adding = False
     elif match[1] != '':
         is_adding = True
-    elif match[2] != '':
-        if is_adding:
-            answer_sum += int(match[2]) * int(match[3])
+    elif match[2] != '' and is_adding:
+        answer_sum += int(match[2]) * int(match[3])
+
+print(answer_sum)
