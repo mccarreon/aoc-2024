@@ -35,14 +35,6 @@ answer = 0
 seen = set()
 for update in update_array:
     for i in range(len(update)):
-        if update[i] not in order_rules_dict and i < len(update) - 1:
-            seen.add(update[i])
-            continue
-        elif update[i] not in order_rules_dict and i == len(update) - 1:
-            answer += update[len(update) // 2]
-            seen = set()
-            break
-        
         if any(subsequent_nums in seen for subsequent_nums in order_rules_dict[update[i]]):
             seen = set()
             break
