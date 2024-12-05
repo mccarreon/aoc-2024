@@ -1,58 +1,50 @@
 import re
 
 
-input_file = '/home/mattc/aoc2/python/4/input.txt'
-# input_file = '/home/mattc/aoc2/python/4/example.txt'
-input_array = []
+def create_order_rules_dict(order_rules_text):
+    order_rules_array = order_rules_text.splitlines()
+    order_rules_dict = {}
+
+    for i in range(len(order_rules_array)):
+        precedent, subsequent = tuple(map(int, order_rules_array[i].split('|')))
+        if precedent not in order_rules_dict:
+            order_rules_dict[precedent] = [subsequent]
+        else:
+            order_rules_dict[precedent].append(subsequent)
+
+        if subsequent not in order_rules_dict:
+            order_rules_dict[subsequent] = []
+
+    return order_rules_dict
+
+def create_update_array(update_text):
+    update_text_array = update_text.splitlines()
+    update_text_array = [list(map(int, line.split(','))) for line in update_text_array]
+    return update_text_array
+
+def bubble_sort(arr, order_rules_dict):
+    n = len(arr)
+    updated = False
+    
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j+1] not in order_rules_dict[arr[j]]:
+                updated = True
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+    return arr[n // 2] if updated else 0
+
+input_file = '/home/mattc/aoc2/python/5/input.txt'
+# input_file = '/home/mattc/aoc2/python/5/example.txt'
 
 with open(input_file, 'r') as file:
-    for line in file:
-        input_array.append(list(line.strip()))
+    order_rules_text, update_text = file.read().split('\n\n')
 
-    
-def find_targets(row: int, col: int, input_array: list, target_coords):
-    row_len, col_len = len(input_array), len(input_array[0])
-    targets = 'MS'
+update_array = create_update_array(update_text)
+order_rules_dict = create_order_rules_dict(order_rules_text)
 
-    if row < 0 or col < 0 or row >= row_len or col >= col_len:
-        return
-    
-    current_char = input_array[row][col]
-    if current_char in targets:
-        target_coords[current_char].append((row, col))
+sum = 0
+for update in update_array:
+    sum += bubble_sort(update, order_rules_dict)
 
-def verify_xmas(target_coords: dict):
-    m1, m2 = target_coords['M']
-    a_x, a_y = target_coords['A'][0]
-
-    dx = m1[0] - a_x
-    dy = m1[1] - a_y
-
-    diag_x = a_x - dx
-    diag_y = a_y - dy
-
-    diagonal = (diag_x, diag_y)
-    if m2 == diagonal:
-        return 0
-    else:
-        print(f'Here is M1 and calculated diagonal: {m1, diagonal}')
-        return 1
-
-answer_sum = 0
-for row in range(len(input_array)):
-    for col in range(len(input_array[row])):
-        if input_array[row][col] == 'A':
-            target_coords = {'M': [], 'S': [], 'A': [(row, col)]}
-            # look at bottom left
-            find_targets(row + 1, col - 1, input_array, target_coords)
-            # look at bottom right
-            find_targets(row + 1, col + 1, input_array, target_coords)
-            # look at top left
-            find_targets(row - 1, col - 1, input_array, target_coords)
-            # look at top right
-            find_targets(row - 1, col + 1, input_array, target_coords)
-            if len(target_coords['M']) == 2 and len(target_coords['S']) == 2:
-                print(target_coords)
-                answer_sum += verify_xmas(target_coords)
-
-print(answer_sum)
+print(sum)

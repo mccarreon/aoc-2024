@@ -4,14 +4,17 @@ import re
 def create_order_rules_dict(order_rules_text):
     order_rules_array = order_rules_text.splitlines()
     order_rules_dict = {}
+
     for i in range(len(order_rules_array)):
-        rule_tuple = tuple(map(int, order_rules_array[i].split('|')))
-        precedent_num = rule_tuple[0]
-        subsequent_num = rule_tuple[1]
-        if precedent_num not in order_rules_dict:
-            order_rules_dict[precedent_num] = [subsequent_num]
+        precedent, subsequent = tuple(map(int, order_rules_array[i].split('|')))
+        if precedent not in order_rules_dict:
+            order_rules_dict[precedent] = [subsequent]
         else:
-            order_rules_dict[precedent_num].append(subsequent_num)
+            order_rules_dict[precedent].append(subsequent)
+
+        if subsequent not in order_rules_dict:
+            order_rules_dict[subsequent] = []
+
     return order_rules_dict
 
 def create_update_array(update_text):
