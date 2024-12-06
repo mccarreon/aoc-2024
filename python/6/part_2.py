@@ -10,9 +10,6 @@ directions = {
     '>': (0, 1)
 }
 
-def u_turn(direction: str) -> str:
-    return turn_right(turn_right(direction))
-
 def turn_right(direction: str) -> tuple:
     if direction == '^':
         return '>'
