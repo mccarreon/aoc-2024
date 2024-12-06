@@ -1,7 +1,7 @@
 import copy
 
-# input_file = 'input.txt'
-input_file = 'example.txt'
+input_file = 'input.txt'
+# input_file = 'example.txt'
 
 directions = {
     '^': (-1, 0),
@@ -9,6 +9,9 @@ directions = {
     '<': (0, -1),
     '>': (0, 1)
 }
+
+def u_turn(direction: str) -> str:
+    return turn_right(turn_right(direction))
 
 def turn_right(direction: str) -> tuple:
     if direction == '^':
@@ -74,6 +77,7 @@ def dfs(start_coordinates: list, direction: str, lab_map: list) -> None:
     col_len = len(lab_map[0])
     cycle_count = 0
     visited = set()
+    blockades_set = set()
 
     while stack:
         coordinates, direction, old_coordinates = stack.pop()
@@ -92,10 +96,12 @@ def dfs(start_coordinates: list, direction: str, lab_map: list) -> None:
             lab_map[coordinates[0]][coordinates[1]] = 'X'
 
         next_coordinates = [sum(x) for x in zip(coordinates, directions[direction])]
-
-        if is_inbounds(next_coordinates, row_len, col_len) and lab_map[next_coordinates[0]][next_coordinates[1]] != '#':
+        if is_inbounds(next_coordinates, row_len, col_len) \
+            and lab_map[next_coordinates[0]][next_coordinates[1]] != '#'\
+            and tuple(next_coordinates) not in blockades_set:
             lab_map_copy = copy.deepcopy(lab_map)
             lab_map_copy[next_coordinates[0]][next_coordinates[1]] = 'O'
+            blockades_set.add(tuple(next_coordinates))
             pretty_print_lab_map(lab_map_copy)
             visited_copy = set(visited)
             cycle_count += is_cycle(coordinates, direction, lab_map_copy, visited_copy)
