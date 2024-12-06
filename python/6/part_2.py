@@ -60,6 +60,7 @@ def is_cycle(start_coordinates: list, direction: str, lab_map: list, visited: se
 
         stack.append((next_coordinates, direction, coordinates))
 
+    pretty_print_lab_map(lab_map)
     return 0
 
 def pretty_print_lab_map(lab_map):
