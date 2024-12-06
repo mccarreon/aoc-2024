@@ -20,8 +20,19 @@ def create_order_rules_dict(order_rules_text):
 def create_update_array(update_text):
     update_text_array = update_text.splitlines()
     update_text_array = [list(map(int, line.split(','))) for line in update_text_array]
-    
     return update_text_array
+
+def bubble_sort(arr, order_rules_dict):
+    n = len(arr)
+    updated = False
+    
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j+1] not in order_rules_dict[arr[j]]:
+                updated = True
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+    return arr[n // 2] if updated else 0
 
 input_file = '/home/mattc/aoc2/python/5/input.txt'
 # input_file = '/home/mattc/aoc2/python/5/example.txt'
@@ -32,18 +43,8 @@ with open(input_file, 'r') as file:
 update_array = create_update_array(update_text)
 order_rules_dict = create_order_rules_dict(order_rules_text)
 
-answer = 0
-seen = set()
+sum = 0
 for update in update_array:
-    for i in range(len(update)):
-        if any(subsequent_nums in seen for subsequent_nums in order_rules_dict[update[i]]):
-            seen = set()
-            break
-        elif i == len(update) - 1:
-            answer += update[len(update) // 2]
-            seen = set()
-            break
-        else:
-            seen.add(update[i])
+    sum += bubble_sort(update, order_rules_dict)
 
-print(answer)
+print(sum)
