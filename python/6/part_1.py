@@ -37,16 +37,14 @@ def dfs(start_coordinates: list, direction: str, lab_map: list) -> None:
         if lab_map[coordinates[0]][coordinates[1]] == '#':
             new_direction = turn_right(direction)
             stack.append((old_coordinates, new_direction, coordinates))
-            print(stack)
             continue
 
-        if lab_map[coordinates[0]][coordinates[1]] == '.':
+        if lab_map[coordinates[0]][coordinates[1]] == '.' or lab_map[coordinates[0]][coordinates[1]] in directions:
             lab_map[coordinates[0]][coordinates[1]] = 'X'
 
         next_coordinates = [sum(x) for x in zip(coordinates, directions[direction])]
 
         stack.append((next_coordinates, direction, coordinates))
-        print(stack)
 
 with open(input_file, 'r') as file:
     lab_map = [list(line) for line in file.read().splitlines()]
