@@ -64,11 +64,9 @@ def bfs(city_map: list, origin_coords: tuple, frequency: str, placed_antinodes: 
                 visited.add((new_row, new_col))
 
 placed_antinodes = set()
-visited_freqs = set()
 for row in range(len(city_map)):
     for col in range(len(city_map[row])):
-        if city_map[row][col] != '.' and (row, col) not in visited_freqs:
+        if city_map[row][col] != '.':
             bfs(city_map, (row, col), city_map[row][col], placed_antinodes)
-            visited_freqs.add((row, col))
 
 print(len(placed_antinodes))
