@@ -69,6 +69,6 @@ for row in range(len(city_map)):
     for col in range(len(city_map[row])):
         if city_map[row][col] != '.' and (row, col) not in visited_freqs:
             bfs(city_map, (row, col), city_map[row][col], placed_antinodes)
-            visited_freqs.add(city_map[row][col])
+            visited_freqs.add((row, col))
 
 print(len(placed_antinodes))
