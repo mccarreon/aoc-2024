@@ -27,7 +27,7 @@ def get_slope(coords: tuple, origin: tuple) -> tuple:
     return (d_row, d_col)
 
 def find_antinodes(city_map: list, coords: tuple, origin_coords: tuple, placed_antinodes: list):
-    [d_row, d_col] = get_slope(coords, origin_coords)
+    d_row, d_col = get_slope(coords, origin_coords)
     
     queue = deque([origin_coords])
     visited = set([origin_coords])
