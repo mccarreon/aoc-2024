@@ -34,7 +34,7 @@ def bfs(trail_map: list, origin: tuple):
                 and (new_row, new_col, (origin[0], origin[1])) not in visited
             ):    
                 queue.append((new_row, new_col))
-                visited.add(new_row, new_col)
+                visited.add((new_row, new_col, (origin[0], origin[1])))
 
     return score
 
