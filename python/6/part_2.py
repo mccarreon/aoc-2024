@@ -96,6 +96,7 @@ def dfs(start_coordinates: list, direction: str, lab_map: list) -> None:
         if is_inbounds(next_coordinates, row_len, col_len) \
             and lab_map[next_coordinates[0]][next_coordinates[1]] != '#'\
             and tuple(next_coordinates) not in blockades_set:
+            
             lab_map_copy = copy.deepcopy(lab_map)
             lab_map_copy[next_coordinates[0]][next_coordinates[1]] = 'O'
             blockades_set.add(tuple(next_coordinates))
